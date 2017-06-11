@@ -18,9 +18,9 @@ function SnakeBlock(x, y, size) {
 SnakeBlock.prototype.draw = function (c) {
     var x = this.x * this.size, y = this.y * this.size;
     c.fillStyle = this.color;
-    c.fillRect(x, y, this.size, this.size);
-    c.strokeStyle = '#fff';
+    c.strokeStyle = '#ecf0f1';
     c.lineWidth = 3;
+    c.fillRect(x, y, this.size, this.size);
     c.strokeRect(x, y, this.size, this.size);
 };
 
@@ -162,9 +162,16 @@ function FoodBlock(maxX, maxY, size) {
 }
 
 FoodBlock.prototype.draw = function(c) {
-    var x = this.x * this.size, y = this.y * this.size;
-    c.fillStyle = '#7aff82';
-    c.fillRect(x, y, this.size, this.size);
+    var x = this.x * this.size + this.size / 2, y = this.y * this.size + this.size / 2;
+    c.fillStyle = '#e74c3c';
+    c.lineWidth = 3;
+    c.strokeStyle = '#ecf0f1';
+    c.beginPath();
+    c.arc(x, y, this.size / 2, 0, 2 * Math.PI, false);
+    c.fill();
+    c.stroke();
+    // c.fillRect(x, y, this.size, this.size);
+    // c.strokeRect(x, y, this.size, this.size);
 };
 
 function Score() {
@@ -185,15 +192,25 @@ Score.prototype.saveScore = function() {
 };
 
 Score.prototype.loadHighScore = function() {
-    this.highScore = localStorage.getItem('snakeHighScore');
+    return localStorage.getItem('snakeHighScore') || 0;
 };
 
 Score.prototype.draw = function(c) {
     var text = "SCORE " + this.score;
+    var highScoreText = "HIGH " + this.highScore;
     c.font = "40px Impact";
-    c.fillStyle = '#eee';
-    c.fillText(text, this.x, this.y);
-    c.strokeStyle = '#000';
+    c.fillStyle = '#bdc3c7';
+    c.strokeStyle = '#ecf0f1';
     c.lineWidth = 1;
+
+    // Score
+    c.fillText(text, this.x, this.y);
     c.strokeText(text, this.x, this.y);
+
+    // High score
+    var highScoreWidth = c.measureText(highScoreText).width;
+    // var highScoreWidth = 10;
+    var canvasWidth = c.canvas.width;
+    c.fillText(highScoreText, canvasWidth - this.x - highScoreWidth, this.y);
+    c.strokeText(highScoreText, canvasWidth - this.x - highScoreWidth, this.y);
 };
